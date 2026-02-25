@@ -95,7 +95,7 @@ $($rows -join "`r`n")
     $ch = @"
 # CHANGELOG.ADDENDUM.$stamp.$seq
 
-- $today: $Title
+- ${today}: $Title
 "@
     New-FileStrict $chPath $ch
 
@@ -115,3 +115,4 @@ $($rows -join "`r`n")
     CommitPush "codex: update ($stamp.$seq)"
   }
 }
+
