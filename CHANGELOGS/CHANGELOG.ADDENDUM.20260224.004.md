@@ -1,0 +1,3 @@
+﻿# CHANGELOG.ADDENDUM.20260224.004
+
+- 2026-02-24: New pages added
