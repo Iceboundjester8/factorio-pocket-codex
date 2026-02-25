@@ -1,4 +1,4 @@
-﻿param(
+param(
   [Parameter(Position=0)][ValidateSet("newpages","commitpush")] [string]$Cmd = "newpages",
   [string]$Title = "New pages added",
   [string[]]$Items = @(),
@@ -59,7 +59,7 @@ $seq   = Next-Seq -Stamp $stamp
 switch ($Cmd) {
   "newpages" {
     if (-not $Items -or $Items.Count -eq 0) {
-      Die "No -Items provided. Example: .\tools\codex.ps1 newpages -Title ""New pages"" -Items ""ID → path"", ""ID2 → path2"""
+      Die "No -Items provided. Example: .\tools\codex.ps1 newpages -Title ""New pages"" -Items ""ID ? path"", ""ID2 ? path2"""
     }
 
     $miPath = "INDEX\MasterIndex.ADDENDUM.$stamp.$seq.md"
@@ -67,22 +67,22 @@ switch ($Cmd) {
     $chDir  = "CHANGELOGS"
     $chPath = "$chDir\CHANGELOG.ADDENDUM.$stamp.$seq.md"
 
-    $mi = Build-AddendumContent "MasterIndex.ADDENDUM.$stamp.$seq — $Title" $Items
+    $mi = Build-AddendumContent "MasterIndex.ADDENDUM.$stamp.$seq � $Title" $Items
     New-FileStrict $miPath $mi
 
-    # Make an IdRegistry table if items look like "ID → path"
+    # Make an IdRegistry table if items look like "ID ? path"
     $rows = @()
     foreach ($it in $Items) {
       $id = $it
       $file = ""
-      if ($it -match "^\s*([^→]+?)\s*→\s*(.+?)\s*$") {
+      if ($it -match "^\s*([^?]+?)\s*?\s*(.+?)\s*$") {
         $id = $Matches[1].Trim()
         $file = $Matches[2].Trim()
       }
       $rows += "| $id | ? | ? | ? | $file | ____ |"
     }
     $idContent = @"
-# IdRegistry.ADDENDUM.$stamp.$seq — New IDs logged
+# IdRegistry.ADDENDUM.$stamp.$seq � New IDs logged
 
 | ID | Type (E/C) | Scope | Title | File | First Written (Journal/Page) |
 |---|---|---|---|---|---|
@@ -115,4 +115,5 @@ $($rows -join "`r`n")
     CommitPush "codex: update ($stamp.$seq)"
   }
 }
+
 
